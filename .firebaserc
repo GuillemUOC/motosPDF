@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "motospdf": {
+      "hosting": {
+        "motosPDF": [
+          "motospdf"
+        ]
+      }
+    }
+  }
+}

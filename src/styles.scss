@@ -1,1 +1,13 @@
-/* You can add global styles to this file, and also import other style files */
+.btn.btn-default {
+  box-shadow: none;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.header + * {
+  margin-top: 3.4rem;
+}

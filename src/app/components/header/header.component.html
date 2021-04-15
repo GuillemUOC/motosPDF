@@ -1,0 +1,24 @@
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container">
+    <div class="left-block">
+      <button *ngIf="this.router.url !== '/usersList'" (click)="goBack()" type="button" class="btn btn-default">
+        <span class="fa fa-arrow-left fa-lg" aria-hidden="true"></span>
+      </button>
+      <button *ngIf="this.router.url !== '/usersList'" routerLink="/" type="button" class="btn btn-default">
+        <span class="fa fa-home fa-lg" aria-hidden="true"></span>
+      </button>
+    </div>
+    <div class="mid-block">
+      <a routerLink="/">
+        <img src="assets/img/logo.png">
+        <h5>motosPDF</h5>
+      </a>
+    </div>
+    <div class="right-block">
+      <button (click)="auth.logout({ returnTo: document.location.origin })"
+      type="button" class="btn btn-default">
+        <span class="fa fa-power-off fa-lg" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+</nav>
