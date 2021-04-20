@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { UsersService } from '../../services/users.service';
 
 @Component({
   selector: 'app-user-form',
@@ -6,8 +8,21 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./user-form.component.scss']
 })
 export class UserFormComponent implements OnInit {
+  form: FormGroup;
 
-  constructor() { }
+  constructor(public usersService: UsersService, private fb: FormBuilder) {
+    this.createForm();
+  }
+
+  createForm(): void {
+    this.form = this.fb.group({
+      dni: [],
+      name: [],
+      surname: [],
+      phone: [],
+      mail: [],
+    });
+  }
 
   ngOnInit(): void {
   }

@@ -6,8 +6,21 @@
   position: fixed;
   top: 0;
   width: 100%;
+  z-index: 1000;
 }
 
 .header + * {
   margin-top: 3.4rem;
+}
+
+.small-text {
+  font-size: 0.75em;
+}
+
+.btn-info {
+  color: white !important;
+}
+
+.not-underline {
+  text-decoration: none;
 }

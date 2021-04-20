@@ -9,7 +9,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ComponentsModule } from './components/components.module';
 import { PagesModule } from './pages/pages.module';
-
 import { AuthModule } from '@auth0/auth0-angular';
 
 @NgModule({
@@ -27,7 +26,7 @@ import { AuthModule } from '@auth0/auth0-angular';
     }),
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAnalyticsModule,
-    AngularFirestoreModule,
+    AngularFirestoreModule
   ],
   providers: [],
   bootstrap: [AppComponent]
