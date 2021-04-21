@@ -19,9 +19,19 @@ export class UsersListComponent implements OnInit {
 
   ngOnInit(): void {
     this.loading = true;
-    this.usersService.getUsers().subscribe(() => {
-      this.loading = false;
-    });
+    this.usersService.getUsers().subscribe(
+      () => {
+        this.loading = false;
+      }, () => {
+        this.loading = false;
+        Swal.fire({
+          title: 'Se ha producido un error',
+          text: 'No se ha podido descargar el listado de usuarios',
+          icon: 'error',
+          allowOutsideClick: false
+        });
+      },
+    );
   }
 
   createFiltersForm(): void {
@@ -36,7 +46,6 @@ export class UsersListComponent implements OnInit {
 
   filter(): void {
     const filters = this.filters.value;
-    console.log(Object.values(filters).every(value => !value));
 
     if (Object.values(filters).every(value => !value)) {
       Swal.fire({
