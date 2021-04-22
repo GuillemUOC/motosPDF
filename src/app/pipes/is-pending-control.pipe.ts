@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Pipe({
   name: 'isPendingControl',
@@ -7,9 +7,11 @@ import { FormGroup } from '@angular/forms';
 })
 export class IsPendingControlPipe implements PipeTransform {
 
-  transform(form: FormGroup, field: string): boolean {
-    const control = form.get(field);
-    return  control.pending;
+  transform(form: FormGroup | FormControl, field?: string, errorName?: string): boolean {
+    const control = field ? form.get(field) : form;
+    return errorName ?
+      control.getError(errorName) === null :
+      control.pending;
   }
 
 

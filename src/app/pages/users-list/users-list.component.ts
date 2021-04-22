@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm } from '@angular/forms';
 import { UsersService } from '../../services/users.service';
 import Swal from 'sweetalert2';
-import { Observable } from 'rxjs';
+import { Commons } from '../../utils/commons.util';
 
 @Component({
   selector: 'app-users-list',
@@ -13,7 +13,7 @@ export class UsersListComponent implements OnInit {
   filters: FormGroup;
   loading = false;
 
-  constructor(public usersService: UsersService, private fb: FormBuilder) {
+  constructor(public usersService: UsersService, private fb: FormBuilder, private commons: Commons) {
     this.createFiltersForm();
   }
 
@@ -65,14 +65,15 @@ export class UsersListComponent implements OnInit {
     });
     Swal.showLoading();
 
-    this.usersService.filter(filters);
-
-    Swal.fire({
-      title: 'Filtros aplicados',
-      text: `Elementos encontrados: (${this.usersService.users.length})`,
-      icon: 'success',
-      allowOutsideClick: false
-    });
+    this.commons.forceLast(this.usersService.filter.bind(this.usersService, filters))
+      .then(() => {
+        Swal.fire({
+          title: 'Filtros aplicados',
+          text: `Elementos encontrados: (${this.usersService.users.length})`,
+          icon: 'success',
+          allowOutsideClick: false
+        });
+      });
   }
 
   removeFilters(): void {
@@ -84,15 +85,58 @@ export class UsersListComponent implements OnInit {
     });
     Swal.showLoading();
 
-    this.filters.reset();
-    this.usersService.filter();
+    this.commons.forceLast(this.usersService.filter.bind(this.usersService))
+      .then(() => {
+        this.filters.reset();
+        Swal.fire({
+          title: 'Filtros eliminados',
+          text: 'Se han eliminado los filtros correctamente',
+          icon: 'success',
+          allowOutsideClick: false
+        });
+      });
+  }
+
+  async deleteUser(id: string): Promise<void> {
+    const result = await Swal.fire({
+      title: '¿Está seguro?',
+      text: 'El usuario se eliminará de la base de datos',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí',
+      cancelButtonText: 'No',
+    });
+
+    if (result.isDismissed) {
+      return;
+    }
 
     Swal.fire({
-      title: 'Filtros eliminados',
-      text: 'Se han eliminado los filtros correctamente',
-      icon: 'success',
+      title: 'Espere',
+      text: 'Eliminando usuario',
+      icon: 'info',
       allowOutsideClick: false
     });
+    Swal.showLoading();
+
+    this.commons.forceLast(this.usersService.deleteUser(id))
+      .then(() => {
+        Swal.fire({
+          title: 'Usuario eliminado',
+          text: 'El usuario se eliminó correctamente',
+          icon: 'success',
+          allowOutsideClick: false
+        });
+      }).catch(() => {
+        Swal.fire({
+          title: 'Se ha producido un error',
+          text: 'No se ha podido eliminar el usuario',
+          icon: 'error',
+          allowOutsideClick: false
+        });
+      });
   }
 
 }

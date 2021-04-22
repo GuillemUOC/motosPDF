@@ -1,3 +1,3 @@
 interface ErrorValidate {
-	[s: string]: boolean;
+  [s: string]: boolean;
 }
