@@ -4,7 +4,8 @@ import { UsersService } from '../../services/users.service';
 import { Commons } from '../../utils/commons.util';
 import { FormUtils } from '../../utils/form.util';
 import Swal from 'sweetalert2';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { UserModel } from '../../models/user.model';
 
 @Component({
   selector: 'app-user-form',
@@ -12,23 +13,37 @@ import { Router } from '@angular/router';
   styleUrls: ['./user-form.component.scss']
 })
 export class UserFormComponent implements OnInit {
+  user = new UserModel();
   form: FormGroup;
 
   constructor(private usersService: UsersService, private fb: FormBuilder, private formUtils: FormUtils,
-              private commons: Commons, private route: Router) {
-    this.createForm();
-  }
+              private commons: Commons, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.createForm();
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id !== 'new') {
+      this.usersService.getUser(id)
+        .then((user: UserModel) => this.user = user ? user : this.user)
+        .catch(() => {
+          Swal.fire({
+            title: 'Se ha producido un error',
+            text: 'No se ha podido obtener la información del usuario',
+            icon: 'error',
+            allowOutsideClick: false
+          });
+        })
+        .finally(() => this.createForm());
+    }
   }
 
   createForm(): void {
     this.form = this.fb.group({
-      dni: ['84392743P', Validators.required, this.validateDni.bind(this)],
-      name: ['Marc', [Validators.required]],
-      surname: ['Garcia Pop', [Validators.required]],
-      phone: ['643204956', [Validators.required, this.formUtils.validatePhone()]],
-      mail: ['margp@hotmail.com', [Validators.required, this.formUtils.validateEmail()]],
+      dni: [this.user.dni, Validators.required, this.validateDni.bind(this)],
+      name: [this.user.name, [Validators.required]],
+      surname: [this.user.surname, [Validators.required]],
+      phone: [this.user.phone, [Validators.required, this.formUtils.validatePhone()]],
+      mail: [this.user.mail, [Validators.required, this.formUtils.validateEmail()]]
     });
   }
 
@@ -38,7 +53,7 @@ export class UserFormComponent implements OnInit {
     }
 
     return new Promise(resolve => {
-      this.commons.forceLast(this.usersService.isDniRepeated(control.value))
+      this.commons.forceLast(this.usersService.isDniRepeated(control.value, this.user.id))
         .then(repeated => resolve(repeated ? { repeated } : null))
         .catch(() => resolve(null));
     });
@@ -52,31 +67,38 @@ export class UserFormComponent implements OnInit {
         icon: 'warning',
         allowOutsideClick: false
       });
+      this.formUtils.markFormAsTouched(this.form);
       return;
     }
 
     Swal.fire({
       title: 'Espere',
-      text: 'Guardando usuario',
+      text: this.user.id ? 'Guardando usuario' : 'Actualizado usuario',
       icon: 'info',
       allowOutsideClick: false
     });
     Swal.showLoading();
 
-    const user = this.form.value;
+    const formData = this.form.value;
     // tslint:disable-next-line: radix
-    user.phone = parseInt(user.phone);
+    formData.phone = parseInt(formData.phone);
+    const user: UserModel = { ...this.user, ...formData };
+    const action = this.user.id ?
+      this.usersService.updateUser.bind(this.usersService, user) :
+      this.usersService.createUser.bind(this.usersService, user);
 
-    this.commons.forceLast(this.usersService.createUser(user))
+    this.commons.forceLast(action())
       .then(() => {
         Swal.fire({
-          title: 'Usuario guardado',
+          title: this.user.id ? 'Usuario guardado' : 'Usuario actualizado',
           text: 'La información del usuario se guardó correctamente',
           icon: 'success',
           allowOutsideClick: false
         }).then(() => {
-          this.usersService.filters = null;
-          this.route.navigate(['/usersList']);
+          if (!this.user.id) {
+            this.usersService.filters = null;
+          }
+          this.router.navigate(['/usersList']);
         });
       }).catch(() => {
         Swal.fire({

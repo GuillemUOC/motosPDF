@@ -10,8 +10,8 @@ export class IsInvalidControlPipe implements PipeTransform {
   transform(form: FormGroup | FormControl, field?: string, errorName?: string, checkDirty = false): boolean {
     const control = field ? form.get(field) : form;
     const invalid = errorName ? !!control.getError(errorName) : control.invalid;
-    const check = checkDirty ? 'dirty' : 'touched';
-    return invalid && control[check];
+    const modifiedControl = checkDirty ? control.dirty || control.touched : control.touched;
+    return invalid && modifiedControl;
   }
 
 }

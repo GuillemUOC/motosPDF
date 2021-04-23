@@ -1,10 +1,9 @@
-export interface User {
+export class UserModel {
   id?: string;
   dni: string;
   name: string;
   surname: string;
   phone: number;
   mail: string;
-  timestamp: Date;
-  motos: [];
+  timestamp: number;
 }

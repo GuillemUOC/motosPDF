@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, NgForm } from '@angular/forms';
 import { UsersService } from '../../services/users.service';
 import Swal from 'sweetalert2';
 import { Commons } from '../../utils/commons.util';
+import { first } from 'rxjs/operators'
 
 @Component({
   selector: 'app-users-list',
@@ -14,15 +15,14 @@ export class UsersListComponent implements OnInit {
   loading = false;
 
   constructor(public usersService: UsersService, private fb: FormBuilder, private commons: Commons) {
-    this.createFiltersForm();
   }
 
   ngOnInit(): void {
+    this.createFiltersForm();
     this.loading = true;
-    this.usersService.getUsers().subscribe(
-      () => {
-        this.loading = false;
-      }, () => {
+
+    this.usersService.getUsers()
+      .catch(() => {
         this.loading = false;
         Swal.fire({
           title: 'Se ha producido un error',
@@ -30,8 +30,8 @@ export class UsersListComponent implements OnInit {
           icon: 'error',
           allowOutsideClick: false
         });
-      },
-    );
+      })
+      .finally(() => this.loading = false);
   }
 
   createFiltersForm(): void {

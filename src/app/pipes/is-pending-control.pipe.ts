@@ -9,10 +9,8 @@ export class IsPendingControlPipe implements PipeTransform {
 
   transform(form: FormGroup | FormControl, field?: string, errorName?: string): boolean {
     const control = field ? form.get(field) : form;
-    return errorName ?
-      control.getError(errorName) === null :
-      control.pending;
+    const invalid = errorName ? control.getError(errorName) === null : control.pending;
+    return invalid && control.dirty;
   }
-
 
 }

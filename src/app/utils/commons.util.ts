@@ -5,7 +5,7 @@ import { FormGroup, FormArray, Validators } from '@angular/forms';
   providedIn: 'root'
 })
 export class Commons {
-  forceLast(action: any, time: number = 500): Promise<any> {
+  forceLast(action: any, time: number = 500): Promise<any> { 
     if (!action.then) {
       action = new Promise<any>(resolve => {
         const res = action();
@@ -23,6 +23,6 @@ export class Commons {
   }
 
   copyObject(element: any): any {
-    JSON.parse(JSON.stringify(element));
+    return JSON.parse(JSON.stringify(element));
   }
 }

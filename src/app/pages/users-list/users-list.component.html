@@ -68,7 +68,7 @@
     </span>
     Elminar filtros
   </button>
-  <button routerLink="/userForm" class="btn btn-primary ms-auto">
+  <button routerLink="/userForm/new" class="btn btn-primary ms-auto">
     <i class="fa fa-plus"></i>
     Nuevo
   </button>
@@ -99,7 +99,8 @@
           </a>
         </td>
         <td>
-          <button type="button" class="btn btn-info m-1">
+          <button type="button" class="btn btn-info m-1"
+            [routerLink]="['/userForm', user.id]">
             <i class="fa fa-pencil"></i>
           </button>
           <button type="button" class="btn btn-danger m-1" (click)="deleteUser(user.id)">

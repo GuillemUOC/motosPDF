@@ -1,14 +1,8 @@
 <div class="animate__animated animate__fadeIn animate__fast">
 
-  <h1>Usuario</h1>
+  <h1 *ngIf="!user.id">Nuevo usuario</h1>
+  <h1 *ngIf="user.id">Editar usuario <small class="text-muted">{{ user.dni }}</small></h1>
   <hr />
-
-  <div class="d-flex justify-content-end">
-    <button routerLink="/heroes" class="btn btn-danger">
-      <i class="fa fa-arrow-left"></i>
-      Agregar
-    </button>
-  </div>
 
   <form class="row g-3" autocomplete="off" [formGroup]="form" (ngSubmit)="saveForm()">
 
@@ -49,7 +43,7 @@
     <div class="col-md-6 form-group">
       <label class="form-label">Teléfono <span class="required-field"></span></label>
       <input class="form-control text-muted" type="text" placeholder="Número de teléfono" formControlName="phone"
-        [class.is-invalid]="form | isInvalidControl:'phone'">
+        [class.is-invalid]="form | isInvalidControl:'phone'" maxlength="9">
       <span *ngIf="form | isInvalidControl:'phone'" class="form-text text-danger">
         Debe itroducir 9 números
       </span>

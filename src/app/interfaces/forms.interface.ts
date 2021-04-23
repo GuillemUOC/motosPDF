@@ -1,3 +1,3 @@
-interface ErrorValidate {
+export interface ErrorValidate {
   [s: string]: boolean;
 }
