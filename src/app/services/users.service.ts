@@ -13,6 +13,7 @@ export class UsersService {
   public allUsers: UserModel[] = [];
   public users: UserModel[] = [];
   public filters: FilterUsers;
+  public page = 1;
 
   constructor(private fs: AngularFirestore, private commons: Commons) { }
 
@@ -114,6 +115,11 @@ export class UsersService {
       this.users.splice(this.users.findIndex(user => user.id === id), 1);
     });
     return promiseDelete;
+  }
+
+  resetConfiguration(): void {
+    this.page = 1;
+    this.filters = null;
   }
 
 }

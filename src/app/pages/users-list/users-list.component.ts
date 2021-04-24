@@ -13,12 +13,15 @@ import { first } from 'rxjs/operators'
 export class UsersListComponent implements OnInit {
   filters: FormGroup;
   loading = false;
+  paginationMaxSize: number;
+  itemsPerPage: number;
 
   constructor(public usersService: UsersService, private fb: FormBuilder, private commons: Commons) {
   }
 
   ngOnInit(): void {
-    this.createFiltersForm();
+    this.paginationMaxSize = 4;
+    this.itemsPerPage = 5;
     this.loading = true;
 
     this.usersService.getUsers()
@@ -32,6 +35,8 @@ export class UsersListComponent implements OnInit {
         });
       })
       .finally(() => this.loading = false);
+
+    this.createFiltersForm();
   }
 
   createFiltersForm(): void {

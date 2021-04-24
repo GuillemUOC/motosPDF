@@ -96,7 +96,7 @@ export class UserFormComponent implements OnInit {
           allowOutsideClick: false
         }).then(() => {
           if (!this.user.id) {
-            this.usersService.filters = null;
+            this.usersService.resetConfiguration();
           }
           this.router.navigate(['/usersList']);
         });
