@@ -6,4 +6,8 @@ export class UserModel {
   phone: number;
   mail: string;
   timestamp: number;
+
+  constructor() {
+    this.timestamp = new Date().getTime();
+  }
 }
