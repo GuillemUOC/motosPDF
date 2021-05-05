@@ -64,7 +64,8 @@
   </button>
 </div>
 
-<div *ngIf="!loading && usersService.users.length" class="overflow-auto animate__animated animate__fadeIn animate__fast">
+<div *ngIf="!loading && usersService.users.length"
+  class="overflow-auto animate__animated animate__fadeIn animate__fast">
   <table class="table text-center align-middle mb-3">
     <thead class="table">
       <tr>
@@ -77,14 +78,15 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let user of usersService.users | paginate: {itemsPerPage:itemsPerPage, currentPage:usersService.page};">
+      <tr
+        *ngFor="let user of usersService.users | paginate: {itemsPerPage:itemsPerPage, currentPage:usersService.page};">
         <td>{{ user.dni }}</td>
         <td>{{ user.name +" "+ user.surname }}</td>
         <td>{{ user.phone }}</td>
         <td>{{ user.mail }}</td>
         <td>
-          <a class="not-underline" routerLink="/">
-            <span class="me-1">(0)</span>
+          <a class="not-underline" [routerLink]="['/motosList', user.id]">
+            <span class="me-1">({{ user.motos }})</span>
             <i class="fa fa-motorcycle" aria-hidden="true"></i>
           </a>
         </td>
@@ -101,11 +103,9 @@
   </table>
 </div>
 <div class="d-flex justify-content-center">
-  <pagination *ngIf="usersService.users.length > itemsPerPage" [boundaryLinks]="true" [totalItems]="usersService.users.length + 1" previousText="&lsaquo;"
-    nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" 
-    [maxSize]="paginationMaxSize"
-    [(ngModel)]="usersService.page"
-    [itemsPerPage]="itemsPerPage">
+  <pagination *ngIf="usersService.users.length > itemsPerPage" [boundaryLinks]="true"
+    [totalItems]="usersService.users.length + 1" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;"
+    lastText="&raquo;" [maxSize]="paginationMaxSize" [(ngModel)]="usersService.page" [itemsPerPage]="itemsPerPage">
   </pagination>
 </div>
 

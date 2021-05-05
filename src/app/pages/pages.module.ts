@@ -9,11 +9,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PipesModule } from '../pipes/pipes.module';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { MotosListComponent } from './motos-list/motos-list.component';
+import { MotoFormComponent } from './moto-form/moto-form.component';
 
 
 
 @NgModule({
-  declarations: [UserFormComponent, UsersListComponent, LoginComponent],
+  declarations: [UserFormComponent, UsersListComponent, LoginComponent, MotosListComponent, MotoFormComponent],
   imports: [
     CommonModule,
     RouterModule,

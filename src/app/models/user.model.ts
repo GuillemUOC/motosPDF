@@ -6,8 +6,10 @@ export class UserModel {
   phone: number;
   mail: string;
   timestamp: number;
+  motos: number;
 
   constructor() {
     this.timestamp = new Date().getTime();
+    this.motos = 0;
   }
 }

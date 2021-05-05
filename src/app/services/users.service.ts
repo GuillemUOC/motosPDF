@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { FilterUsers } from '../interfaces/filter-users.interface';
 import { Commons } from '../utils/commons.util';
@@ -18,7 +17,7 @@ export class UsersService {
   constructor(private fs: AngularFirestore, private commons: Commons) { }
 
   getUser(id: string): Promise<UserModel> | any {
-    const itemsCollection = this.fs.collection<UserModel>('usuarios')
+    const itemsCollection = this.fs.collection<UserModel>('users')
       .doc(id).get().pipe(map(data => {
         const user = data.data();
         if (user) {
@@ -37,7 +36,7 @@ export class UsersService {
     this.allUsers = [];
     this.users = [];
 
-    const itemsCollection = this.fs.collection<UserModel>('usuarios', ref => {
+    const itemsCollection = this.fs.collection<UserModel>('users', ref => {
       return ref.orderBy('timestamp', 'desc');
     }).snapshotChanges()
       .pipe(map(data => {
@@ -62,7 +61,6 @@ export class UsersService {
         ))
       ));
     }
-
     this.filters = filters;
     return this.users;
   }
@@ -78,7 +76,7 @@ export class UsersService {
 
   isDniRepeated(dni: string, id?: string): Promise<boolean> {
     return new Promise(resolve => {
-      const itemsCollection = this.fs.collection<UserModel>('usuarios', ref =>
+      const itemsCollection = this.fs.collection<UserModel>('users', ref =>
         ref.where('dni', '==', dni)
       );
       itemsCollection.snapshotChanges()
@@ -94,21 +92,23 @@ export class UsersService {
   async createUser(user: UserModel): Promise<any> {
     const userCopy = this.commons.copyObject(user);
     delete userCopy.id;
-    const itemsCollection = this.fs.collection<UserModel>('usuarios');
+    const itemsCollection = this.fs.collection<UserModel>('users');
     const repeated = await this.isDniRepeated(user.dni);
     return !repeated ? itemsCollection.add(userCopy) : Promise.reject();
   }
 
   async updateUser(user: UserModel): Promise<any> {
-    const itemsCollection = this.fs.collection<UserModel>('usuarios');
+    const itemsCollection = this.fs.collection<UserModel>('users');
     const userCopy = this.commons.copyObject(user);
     delete userCopy.id;
+    delete userCopy.timestamp;
+    delete userCopy.motos;
     const repeated = await this.isDniRepeated(user.dni, user.id);
     return !repeated ? itemsCollection.doc(user.id).update(userCopy) : Promise.reject();
   }
 
   deleteUser(id: string): Promise<any> {
-    const itemsCollection = this.fs.collection<UserModel>('usuarios');
+    const itemsCollection = this.fs.collection<UserModel>('users');
     const promiseDelete = itemsCollection.doc(id).delete();
     promiseDelete.then(() => {
       this.allUsers.splice(this.allUsers.findIndex(user => user.id === id), 1);

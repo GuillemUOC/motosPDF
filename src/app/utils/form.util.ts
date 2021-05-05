@@ -17,12 +17,16 @@ export class FormUtils {
   // ....................................................................
   // GLOBAL VALIDATIONS
   // ....................................................................
-  
+
   validatePhone(): any {
     return Validators.pattern('^\\d{9}$');
   }
 
   validateEmail(): any {
     return Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}$');
+  }
+
+  validateOnlyIntegers(): any {
+    return Validators.pattern('^\\d*$');
   }
 }

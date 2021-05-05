@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, NgForm } from '@angular/forms';
 import { UsersService } from '../../services/users.service';
 import Swal from 'sweetalert2';
 import { Commons } from '../../utils/commons.util';
-import { first } from 'rxjs/operators'
 
 @Component({
   selector: 'app-users-list',

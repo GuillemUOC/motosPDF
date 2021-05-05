@@ -19,22 +19,23 @@ export class UserFormComponent implements OnInit {
   constructor(private usersService: UsersService, private fb: FormBuilder, private formUtils: FormUtils,
               private commons: Commons, private router: Router, private route: ActivatedRoute) { }
 
-  ngOnInit(): void {
-    this.createForm();
-    const id = this.route.snapshot.paramMap.get('id');
+  async ngOnInit(): Promise<void> {
+    const id = this.route.snapshot.paramMap.get('user');
     if (id !== 'new') {
-      this.usersService.getUser(id)
-        .then((user: UserModel) => this.user = user ? user : this.user)
-        .catch(() => {
-          Swal.fire({
-            title: 'Se ha producido un error',
-            text: 'No se ha podido obtener la información del usuario',
-            icon: 'error',
-            allowOutsideClick: false
-          });
-        })
-        .finally(() => this.createForm());
+      await new Promise(resolve => {
+        this.usersService.getUser(id)
+          .then((user: UserModel) => this.user = user ? user : this.user)
+          .catch(() => {
+            Swal.fire({
+              title: 'Se ha producido un error',
+              text: 'No se ha podido obtener la información del usuario',
+              icon: 'error',
+              allowOutsideClick: false
+            });
+          }).finally(resolve);
+      });
     }
+    this.createForm();
   }
 
   createForm(): void {
