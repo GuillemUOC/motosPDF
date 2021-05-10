@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { FormGroup, FormArray, Validators } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
 })
 export class Commons {
-  forceLast(action: any, time: number = 500): Promise<any> { 
+  forceLast(action: any, time: number = 500): Promise<any> {
     if (!action.then) {
       action = new Promise<any>(resolve => {
         const res = action();

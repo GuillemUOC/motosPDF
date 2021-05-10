@@ -13,6 +13,12 @@
       <span *ngIf="form | isInvalidControl:'registration'" class="form-text text-danger">
         El campo no puede estar vacio
       </span>
+      <span *ngIf="form | isInvalidControl:'registration':'repeated':true" class="form-text text-danger">
+        El usuario ya tiene registrada esta matrícula
+      </span>
+      <span *ngIf="form | isPendingControl:'registration'" class="form-text text-info">
+        <i class="fa fa-spin fa-refresh" aria-hidden="true"></i> Comprobando si la matrícula ya está resgistrada
+      </span>
     </div>
 
     <div class="col-md-6 form-group">

@@ -9,15 +9,16 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./motos-list.component.scss']
 })
 export class MotosListComponent implements OnInit {
+  userId: string;
   loading = false;
 
   constructor(public motosService: MotosService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    const userId = this.route.snapshot.paramMap.get('user');
+    this.userId = this.route.snapshot.paramMap.get('user');
 
     this.loading = true;
-    this.motosService.getMotos(userId)
+    this.motosService.getMotos(this.userId)
       .catch(() => {
         this.loading = false;
         Swal.fire({

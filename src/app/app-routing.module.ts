@@ -11,7 +11,7 @@ const routes: Routes = [
   { path: 'usersList', component: UsersListComponent, canActivate: [AuthGuard] },
   { path: 'userForm/:user', component: UserFormComponent, canActivate: [AuthGuard] },
   { path: 'motosList/:user', component: MotosListComponent, canActivate: [AuthGuard] },
-  { path: 'motoForm/:moto', component: MotoFormComponent, canActivate: [AuthGuard] },
+  { path: 'motoForm/:user/:moto', component: MotoFormComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
   { path: '**', pathMatch: 'full', redirectTo: 'usersList' }
 ];

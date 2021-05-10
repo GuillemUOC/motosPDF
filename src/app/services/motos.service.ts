@@ -1,40 +1,25 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
 import { MotoModel } from '../models/moto.model';
 import { Commons } from '../utils/commons.util';
-import { first, map } from 'rxjs/operators';
+import { FirebaseService } from './firebase.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MotosService {
+  public collection = 'motos';
   public motos: MotoModel[] = [];
 
-  constructor(private fs: AngularFirestore, private commons: Commons) { }
+  constructor(private commons: Commons,  private firebase: FirebaseService) { }
 
-  getMotos(userId: string): Promise<MotoModel[]> {
+  async getMotos(userId: string): Promise<MotoModel[]> {
     this.motos = [];
-
-    const itemsCollection = this.fs.collection<MotoModel>('motos', ref => {
-      return ref.orderBy('timestamp', 'desc').where('user', '==', userId);
-    }).snapshotChanges()
-      .pipe(map(data => {
-        this.motos = this.snapMoto(data);
-        return this.motos;
-      }));
-
-    return new Promise((resolve, reject) => {
-      // tslint:disable-next-line: deprecation
-      itemsCollection.pipe(first()).subscribe((motos) => resolve(motos), reject);
-    });
+    const motos = await this.firebase.getElments(this.collection, ref => ref.orderBy('timestamp', 'desc').where('user', '==', userId));
+    return this.motos = motos;
   }
 
-  snapMoto(data: any): MotoModel[] {
-    return data.map((a: any) => {
-      // tslint:disable-next-line: no-shadowed-variable
-      const data = a.payload.doc.data();
-      const id = a.payload.doc.id;
-      return { id, ...data };
-    });
+  async isRegistrationRepeated(registration: string, userId: string, motoId?: string): Promise<boolean> {
+    const motos = await this.firebase.getElments(this.collection, ref => ref.where('user', '==', userId));
+    return motos.some(moto => moto.id !== motoId && moto.registration === registration);
   }
 }

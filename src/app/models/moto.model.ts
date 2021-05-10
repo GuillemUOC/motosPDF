@@ -6,6 +6,7 @@ export class MotoModel {
   kilometers: number;
   timestamp: number;
   treatments: number;
+  user: string;
 
   constructor() {
     this.timestamp = new Date().getTime();

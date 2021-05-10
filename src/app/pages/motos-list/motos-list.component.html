@@ -4,7 +4,7 @@
 </div>
 
 <div class="d-flex flex-row mb-3">
-  <button routerLink="/motoForm/new" class="btn btn-primary ms-auto">
+  <button [routerLink]="['/motoForm', userId, 'new']" class="btn btn-primary ms-auto">
     <i class="fa fa-plus"></i>
     Nuevo
   </button>

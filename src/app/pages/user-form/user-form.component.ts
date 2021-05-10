@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { UsersService } from '../../services/users.service';
 import { Commons } from '../../utils/commons.util';
-import { FormUtils } from '../../utils/form.util';
 import Swal from 'sweetalert2';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserModel } from '../../models/user.model';
+import { FormUtils } from '../../utils/form.util';
 
 @Component({
   selector: 'app-user-form',
@@ -19,10 +19,9 @@ export class UserFormComponent implements OnInit {
   constructor(private usersService: UsersService, private fb: FormBuilder, private formUtils: FormUtils,
               private commons: Commons, private router: Router, private route: ActivatedRoute) { }
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('user');
     if (id !== 'new') {
-      await new Promise(resolve => {
         this.usersService.getUser(id)
           .then((user: UserModel) => this.user = user ? user : this.user)
           .catch(() => {
@@ -32,8 +31,8 @@ export class UserFormComponent implements OnInit {
               icon: 'error',
               allowOutsideClick: false
             });
-          }).finally(resolve);
-      });
+          })
+          .finally(() => this.createForm());
     }
     this.createForm();
   }
@@ -41,8 +40,8 @@ export class UserFormComponent implements OnInit {
   createForm(): void {
     this.form = this.fb.group({
       dni: [this.user.dni, Validators.required, this.validateDni.bind(this)],
-      name: [this.user.name, [Validators.required]],
-      surname: [this.user.surname, [Validators.required]],
+      name: [this.user.name, Validators.required],
+      surname: [this.user.surname, Validators.required],
       phone: [this.user.phone, [Validators.required, this.formUtils.validatePhone()]],
       mail: [this.user.mail, [Validators.required, this.formUtils.validateEmail()]]
     });
@@ -91,7 +90,7 @@ export class UserFormComponent implements OnInit {
     this.commons.forceLast(action())
       .then(() => {
         Swal.fire({
-          title: this.user.id ? 'Usuario guardado' : 'Usuario actualizado',
+          title: this.user.id ? 'Usuario actualizado' : 'Usuario guardado',
           text: 'La información del usuario se guardó correctamente',
           icon: 'success',
           allowOutsideClick: false
