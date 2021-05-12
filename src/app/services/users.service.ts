@@ -19,14 +19,18 @@ export class UsersService {
     return this.firebase.getElment(this.collection, id);
   }
 
-  async getUsers(filters?: FilterUsers): Promise<UserModel[]> {
+  async getUsers(filters?: FilterUsers, overwriteFilters: boolean = true): Promise<UserModel[]> {
     let users: UserModel[] = await this.firebase.getElments(this.collection, ref => ref.orderBy('timestamp', 'desc'));
-    users = filters ? users.filter(user => (
-      Object.entries(filters).some(([key, value]) => (
-        value && String(user[key]).toLowerCase().includes(String(value).toLowerCase())
-      ))
-    )) : users;
-    this.filters = filters;
+    if (filters) {
+      users = users.filter(user => (
+        Object.entries(filters).some(([key, value]) => (
+          value && String(user[key]).toLowerCase().includes(String(value).toLowerCase())
+        ))
+      ));
+    }
+    if (overwriteFilters){
+      this.filters = filters;
+    }
     return users;
   }
 
@@ -52,12 +56,13 @@ export class UsersService {
   async deleteUser(id: string): Promise<any> {
     await this.firebase.delete(this.collection, id);
     const motosService = this.injector.get(MotosService);
-    const motos = await this.firebase.getElments('motos', ref => ref.where('user', '==', id));
+    const motos = await motosService.getMotos(id);
     motos.forEach(async moto => await motosService.deleteMoto(moto.id));
   }
 
   async actualizeMotos(id: string): Promise<any> {
-    const motos = await this.firebase.getElments('motos', ref => ref.where('user', '==', id));
+    const motosService = this.injector.get(MotosService);
+    const motos = await motosService.getMotos(id);
     const user = {
       id,
       motos: motos.length
