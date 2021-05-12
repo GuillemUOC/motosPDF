@@ -13,27 +13,45 @@ import { FormUtils } from '../../utils/form.util';
   styleUrls: ['./user-form.component.scss']
 })
 export class UserFormComponent implements OnInit {
+  navBack: any;
   user = new UserModel();
   form: FormGroup;
 
   constructor(private usersService: UsersService, private fb: FormBuilder, private formUtils: FormUtils,
-              private commons: Commons, private router: Router, private route: ActivatedRoute) { }
+              private commons: Commons, private router: Router, private route: ActivatedRoute) { 
+    this.navBack = () => this.router.navigate(['/usersList']);
+  }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('user');
+
     if (id !== 'new') {
-        this.usersService.getUser(id)
-          .then((user: UserModel) => this.user = user ? user : this.user)
-          .catch(() => {
-            Swal.fire({
-              title: 'Se ha producido un error',
-              text: 'No se ha podido obtener la información del usuario',
-              icon: 'error',
-              allowOutsideClick: false
-            });
-          })
-          .finally(() => this.createForm());
+      Swal.fire({
+        title: 'Espere',
+        text: 'Cargango datos del usuario',
+        icon: 'info',
+        allowOutsideClick: false
+      });
+      Swal.showLoading();
+
+      this.commons.forceLast(this.usersService.getUser(id))
+        .then((user: UserModel) => {
+          this.user = user ? user : this.user;
+          this.createForm();
+          Swal.close();
+        })
+        .catch(() => {
+          Swal.fire({
+            title: 'Se ha producido un error',
+            text: 'No se ha podido obtener la información del usuario',
+            icon: 'error',
+            allowOutsideClick: false
+          }).then(() => {
+            this.router.navigate(['/usersList']);
+          });
+        });
     }
+
     this.createForm();
   }
 
@@ -109,5 +127,7 @@ export class UserFormComponent implements OnInit {
         });
       });
   }
+
+  
 
 }

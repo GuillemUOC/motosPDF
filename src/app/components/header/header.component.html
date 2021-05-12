@@ -1,7 +1,7 @@
 <nav class="navbar navbar-dark">
   <div class="container">
     <div class="left-block">
-      <button *ngIf="this.router.url !== '/usersList'" (click)="goBack()" type="button" class="btn btn-default">
+      <button *ngIf="this.router.url !== '/usersList'" (click)="_navBack()" type="button" class="btn btn-default">
         <span class="fa fa-arrow-left fa-lg" aria-hidden="true"></span>
       </button>
       <button *ngIf="this.router.url !== '/usersList'" routerLink="/" type="button" class="btn btn-default">

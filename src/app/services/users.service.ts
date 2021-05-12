@@ -71,6 +71,20 @@ export class UsersService {
     return promiseDelete;
   }
 
+  async actualizeMotosOfUser(id: string): Promise<any> {
+    // const promiseUser = this.getUser(id);
+    // const promiseMotos = this.firebase.getElments('motos', ref => ref.where('user', '==', id));
+    // const [user, motos] = await Promise.all([promiseUser, promiseMotos]);
+
+    // if (!user) {
+    //   return;
+    // }
+
+
+    // user.motos = motos.length;
+    // this.updateUser
+  }
+
   resetConfiguration(): void {
     this.page = 1;
     this.filters = null;

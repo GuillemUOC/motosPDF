@@ -37,7 +37,7 @@
           </a>
         </td>
         <td>
-          <button type="button" class="btn btn-info m-1" [routerLink]="['/motoForm', moto.id]">
+          <button type="button" class="btn btn-info m-1" [routerLink]="['/motoForm', userId, moto.id]">
             <i class="fa fa-pencil"></i>
           </button>
           <button type="button" class="btn btn-danger m-1" (click)="deleteMoto(moto.id)">

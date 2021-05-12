@@ -39,7 +39,7 @@ export class FirebaseService {
 
     return new Promise((resolve, reject) => {
       // tslint:disable-next-line: deprecation
-      itemsCollection.pipe(first()).subscribe((element) => resolve(element), reject);
+      itemsCollection.pipe(first()).subscribe((element) => element ? resolve(element) : reject(), reject);
     });
   }
 

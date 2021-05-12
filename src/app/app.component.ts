@@ -7,6 +7,17 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'motosPDF';
+  activeComponent;
 
   constructor() { }
+
+  navBack() {
+    this.activeComponent?.navBack();
+  }
+
+  onActivate(componentReference) {
+    console.log(componentReference);
+    
+    this.activeComponent = componentReference;
+  }
 }
