@@ -13,14 +13,12 @@ import { FormUtils } from '../../utils/form.util';
   styleUrls: ['./user-form.component.scss']
 })
 export class UserFormComponent implements OnInit {
-  navBack: any;
   user = new UserModel();
   form: FormGroup;
 
-  constructor(private usersService: UsersService, private fb: FormBuilder, private formUtils: FormUtils,
-              private commons: Commons, private router: Router, private route: ActivatedRoute) { 
-    this.navBack = () => this.router.navigate(['/usersList']);
-  }
+  constructor(private usersService: UsersService, private fb: FormBuilder,
+              private formUtils: FormUtils, private commons: Commons,
+              private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('user');
@@ -128,6 +126,7 @@ export class UserFormComponent implements OnInit {
       });
   }
 
-  
-
+  navBack(): any {
+    this.router.navigate(['/usersList']);
+  }
 }

@@ -16,8 +16,6 @@ export class AppComponent {
   }
 
   onActivate(componentReference) {
-    console.log(componentReference);
-    
     this.activeComponent = componentReference;
   }
 }

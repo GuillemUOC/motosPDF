@@ -10,7 +10,7 @@
   </button>
 </div>
 
-<div *ngIf="!loading && motosService.motos.length"
+<div *ngIf="!loading && motos.length"
   class="overflow-auto animate__animated animate__fadeIn animate__fast">
   <table class="table text-center align-middle mb-3">
     <thead class="table">
@@ -25,7 +25,7 @@
     </thead>
     <tbody>
       <tr
-        *ngFor="let moto of motosService.motos | paginate: {itemsPerPage:itemsPerPage, currentPage:motosService.page};">
+        *ngFor="let moto of motos | paginate: {itemsPerPage:itemsPerPage, currentPage:motosService.page};">
         <td>{{ moto.registration }}</td>
         <td>{{ moto.brand }}</td>
         <td>{{ moto.model }}</td>
@@ -51,4 +51,4 @@
 
 <app-loading-block class="animate__animated animate__fadeIn animate__fast" *ngIf="loading"></app-loading-block>
 <app-no-data-block class="animate__animated animate__fadeIn animate__fast"
-  *ngIf="!loading && !motosService.motos.length"></app-no-data-block>
+  *ngIf="!loading && !motos.length"></app-no-data-block>

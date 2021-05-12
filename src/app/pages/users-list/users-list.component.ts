@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, NgForm } from '@angular/forms';
 import { UsersService } from '../../services/users.service';
 import Swal from 'sweetalert2';
 import { Commons } from '../../utils/commons.util';
+import { UserModel } from '../../models/user.model';
 
 @Component({
   selector: 'app-users-list',
@@ -10,20 +11,21 @@ import { Commons } from '../../utils/commons.util';
   styleUrls: ['./users-list.component.scss']
 })
 export class UsersListComponent implements OnInit {
+  public users: UserModel[] = [];
   filters: FormGroup;
   loading = false;
   paginationMaxSize: number;
   itemsPerPage: number;
 
-  constructor(public usersService: UsersService, private fb: FormBuilder, private commons: Commons) {
-  }
+  constructor(public usersService: UsersService, private fb: FormBuilder, private commons: Commons) { }
 
   ngOnInit(): void {
     this.paginationMaxSize = 4;
     this.itemsPerPage = 5;
     this.loading = true;
 
-    this.usersService.getUsers()
+    this.usersService.getUsers(this.usersService.filters)
+      .then(users => this.users = users)
       .catch(() => {
         this.loading = false;
         Swal.fire({
@@ -40,11 +42,11 @@ export class UsersListComponent implements OnInit {
 
   createFiltersForm(): void {
     this.filters = this.fb.group({
-      dni: [],
-      name: [],
-      surname: [],
-      phone: [],
-      mail: [],
+      dni: [this.usersService.filters?.dni],
+      name: [this.usersService.filters?.name],
+      surname: [this.usersService.filters?.surname],
+      phone: [this.usersService.filters?.phone],
+      mail: [this.usersService.filters?.mail],
     });
   }
 
@@ -69,11 +71,12 @@ export class UsersListComponent implements OnInit {
     });
     Swal.showLoading();
 
-    this.commons.forceLast(this.usersService.filter.bind(this.usersService, filters))
-      .then(() => {
+    this.commons.forceLast(this.usersService.getUsers(filters))
+      .then((users) => {
+        this.users = users;
         Swal.fire({
           title: 'Filtros aplicados',
-          text: `Elementos encontrados: (${this.usersService.users.length})`,
+          text: `Elementos encontrados: (${this.users.length})`,
           icon: 'success',
           allowOutsideClick: false
         });
@@ -89,8 +92,9 @@ export class UsersListComponent implements OnInit {
     });
     Swal.showLoading();
 
-    this.commons.forceLast(this.usersService.filter.bind(this.usersService))
-      .then(() => {
+    this.commons.forceLast(this.usersService.getUsers())
+      .then((users) => {
+        this.users = users;
         this.filters.reset();
         Swal.fire({
           title: 'Filtros eliminados',
@@ -127,6 +131,7 @@ export class UsersListComponent implements OnInit {
 
     this.commons.forceLast(this.usersService.deleteUser(id))
       .then(() => {
+        this.users.splice(this.users.findIndex(user => user.id === id), 1);
         Swal.fire({
           title: 'Usuario eliminado',
           text: 'El usuario se eliminó correctamente',

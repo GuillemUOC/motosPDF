@@ -13,14 +13,12 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./moto-form.component.scss']
 })
 export class MotoFormComponent implements OnInit {
-  navBack: any;
   moto = new MotoModel();
   form: FormGroup;
 
   constructor(private formUtils: FormUtils, private fb: FormBuilder, private commons: Commons,
-                private motosService: MotosService, private router: Router, private route: ActivatedRoute) {
-    this.navBack = () => this.router.navigate(['/motosList', this.moto.user]);
-  }
+              private motosService: MotosService, private router: Router,
+              private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.moto.user = this.route.snapshot.paramMap.get('user');
@@ -125,4 +123,7 @@ export class MotoFormComponent implements OnInit {
       });
   }
 
+  navBack(): any {
+    this.router.navigate(['/motosList', this.moto.user]);
+  }
 }

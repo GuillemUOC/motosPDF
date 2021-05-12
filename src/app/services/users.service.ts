@@ -1,46 +1,33 @@
-import { Injectable } from '@angular/core';
+import { Component, Injectable, Injector } from '@angular/core';
 import { FilterUsers } from '../interfaces/filter-users.interface';
 import { Commons } from '../utils/commons.util';
 import { UserModel } from '../models/user.model';
 import { FirebaseService } from './firebase.service';
+import { MotosService } from './motos.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsersService {
   public collection = 'users';
-  public allUsers: UserModel[] = [];
-  public users: UserModel[] = [];
   public filters: FilterUsers;
   public page = 1;
 
-  constructor(private commons: Commons, private firebase: FirebaseService) { }
+  constructor(private commons: Commons, private firebase: FirebaseService, private injector: Injector) { }
 
   getUser(id: string): Promise<UserModel> | any {
     return this.firebase.getElment(this.collection, id);
   }
 
-  async getUsers(): Promise<UserModel[]> {
-    this.allUsers = [];
-    this.users = [];
-
-    const users = await this.firebase.getElments(this.collection, ref => ref.orderBy('timestamp', 'desc'));
-    this.allUsers = users;
-    return this.filter(this.filters);
-  }
-
-  filter(filters?: FilterUsers): UserModel[] {
-    if (!filters) {
-      this.users = [...this.allUsers];
-    } else {
-      this.users = this.allUsers.filter(user => (
-        Object.entries(filters).some(([key, value]) => (
-          value && String(user[key]).toLowerCase().includes(String(value).toLowerCase())
-        ))
-      ));
-    }
+  async getUsers(filters?: FilterUsers): Promise<UserModel[]> {
+    let users: UserModel[] = await this.firebase.getElments(this.collection, ref => ref.orderBy('timestamp', 'desc'));
+    users = filters ? users.filter(user => (
+      Object.entries(filters).some(([key, value]) => (
+        value && String(user[key]).toLowerCase().includes(String(value).toLowerCase())
+      ))
+    )) : users;
     this.filters = filters;
-    return this.users;
+    return users;
   }
 
   async isDniRepeated(dni: string, id?: string): Promise<boolean> {
@@ -49,40 +36,33 @@ export class UsersService {
   }
 
   async createUser(user: UserModel): Promise<any> {
-    const repeated = await this.isDniRepeated(user.dni);
-    return !repeated ? this.firebase.create(this.collection, user) : Promise.reject();
+    if (await this.isDniRepeated(user.dni, user.id)) {
+      return Promise.reject();
+    }
+    return this.firebase.create(this.collection, user);
   }
 
   async updateUser(user: UserModel): Promise<any> {
-    const userCopy = this.commons.copyObject(user);
-    delete userCopy.timestamp;
-    delete userCopy.motos;
-
-    const repeated = await this.isDniRepeated(user.dni, user.id);
-    return !repeated ? this.firebase.update(this.collection, userCopy) : Promise.reject();
+    if (user.dni && await this.isDniRepeated(user.dni, user.id)) {
+      return Promise.reject();
+    }
+    return this.firebase.update(this.collection, user);
   }
 
-  deleteUser(id: string): Promise<any> {
-    const promiseDelete = this.firebase.delete(this.collection, id);
-    promiseDelete.then(() => {
-      this.allUsers.splice(this.allUsers.findIndex(user => user.id === id), 1);
-      this.users.splice(this.users.findIndex(user => user.id === id), 1);
-    });
-    return promiseDelete;
+  async deleteUser(id: string): Promise<any> {
+    await this.firebase.delete(this.collection, id);
+    const motosService = this.injector.get(MotosService);
+    const motos = await this.firebase.getElments('motos', ref => ref.where('user', '==', id));
+    motos.forEach(async moto => await motosService.deleteMoto(moto.id));
   }
 
-  async actualizeMotosOfUser(id: string): Promise<any> {
-    // const promiseUser = this.getUser(id);
-    // const promiseMotos = this.firebase.getElments('motos', ref => ref.where('user', '==', id));
-    // const [user, motos] = await Promise.all([promiseUser, promiseMotos]);
-
-    // if (!user) {
-    //   return;
-    // }
-
-
-    // user.motos = motos.length;
-    // this.updateUser
+  async actualizeMotos(id: string): Promise<any> {
+    const motos = await this.firebase.getElments('motos', ref => ref.where('user', '==', id));
+    const user = {
+      id,
+      motos: motos.length
+    };
+    this.updateUser(user);
   }
 
   resetConfiguration(): void {
@@ -91,3 +71,4 @@ export class UsersService {
   }
 
 }
+

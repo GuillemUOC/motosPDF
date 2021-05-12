@@ -3,6 +3,7 @@ import { MotosService } from '../../services/motos.service';
 import Swal from 'sweetalert2';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Commons } from '../../utils/commons.util';
+import { MotoModel } from '../../models/moto.model';
 
 @Component({
   selector: 'app-motos-list',
@@ -10,20 +11,19 @@ import { Commons } from '../../utils/commons.util';
   styleUrls: ['./motos-list.component.scss']
 })
 export class MotosListComponent implements OnInit {
-  navBack: any;
+  public motos: MotoModel[] = [];
   userId: string;
   loading = false;
 
-  constructor(public motosService: MotosService, private route: ActivatedRoute, private commons: Commons,
-              private router: Router) {
-    this.navBack = () => this.router.navigate(['/usersList']);
-  }
+  constructor(public motosService: MotosService, private route: ActivatedRoute,
+              private commons: Commons, private router: Router) { }
 
   ngOnInit(): void {
     this.userId = this.route.snapshot.paramMap.get('user');
 
     this.loading = true;
     this.motosService.getMotos(this.userId)
+      .then(motos => this.motos = motos)
       .catch(() => {
         this.loading = false;
         Swal.fire({
@@ -62,6 +62,7 @@ export class MotosListComponent implements OnInit {
 
     this.commons.forceLast(this.motosService.deleteMoto(id))
       .then(() => {
+        this.motos.splice(this.motos.findIndex(moto => moto.id === id), 1);
         Swal.fire({
           title: 'Moto eliminada',
           text: 'La moto se eliminó correctamente',
@@ -76,5 +77,9 @@ export class MotosListComponent implements OnInit {
           allowOutsideClick: false
         });
       });
+  }
+
+  navBack(): any {
+    this.router.navigate(['/usersList']);
   }
 }
