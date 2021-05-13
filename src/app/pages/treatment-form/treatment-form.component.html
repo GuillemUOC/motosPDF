@@ -1,0 +1,68 @@
+<div class="animate__animated animate__fadeIn animate__fast">
+
+  <h1 *ngIf="!treatment.id">Nuevo tratamiento</h1>
+  <h1 *ngIf="treatment.id">Editar tratamiento <small class="text-muted">{{ treatment.registration }}</small></h1>
+  <hr />
+
+  <form class="row g-3" autocomplete="off" [formGroup]="form" (ngSubmit)="saveForm()">
+
+    <div class="col-md-12 form-group">
+      <label class="form-label">Motivo <span class="required-field"></span></label>
+      <input class="form-control text-muted" type="text" placeholder="Motivo" formControlName="reason"
+        [class.is-invalid]="form | isInvalidControl:'reason'">
+      <span *ngIf="form | isInvalidControl:'reason'" class="form-text text-danger">
+        El campo no puede estar vacio
+      </span>
+    </div>
+
+    <div class="col-md-12 form-group">
+      <label class="form-label">Comentarios</label>
+      <textarea class="form-control text-muted" placeholder="Comentarios" formControlName="comments"></textarea>
+    </div>
+
+    <div class="col-md-12 form-group">
+      <label class="form-label">Resuelto</label>
+      <div>
+        <div class="form-check form-check-inline">
+          <input (change)="onResolvedChange()" class="form-check-input" type="radio" name="inlineRadioOptions"
+            [value]="true" formControlName="resolved">
+          <label class="form-check-label">Sí</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input (change)="onResolvedChange()" class="form-check-input" type="radio" name="inlineRadioOptions"
+            [value]="false" formControlName="resolved">
+          <label class="form-check-label">No</label>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="form.value.resolved" class="col-md-12 form-group animate__animated animate__fadeIn animate__fast">
+      <label class="form-label">Resolución <span class="required-field"></span></label>
+      <textarea [attr.disabled]="1 ? true : null" class="form-control text-muted" type="text" placeholder="Resolución"
+        formControlName="resolution" [class.is-invalid]="form | isInvalidControl:'resolution'"></textarea>
+      <span *ngIf="form | isInvalidControl:'resolution'" class="form-text text-danger">
+        El campo no puede estar vacio
+      </span>
+    </div>
+
+
+    <div class="form-group col-12 text-center">
+      <hr>
+      <button type="submit" class="btn btn-primary w-100 text-truncate">
+        <i class="fa fa-floppy-o"></i>
+        Guardar
+      </button>
+    </div>
+  </form>
+
+</div>
+
+<hr />
+<pre>
+  Valid: {{ form.valid }}
+  Sratus: {{ form.status }}
+</pre>
+
+<pre>
+  {{ form.value | json }}
+</pre>

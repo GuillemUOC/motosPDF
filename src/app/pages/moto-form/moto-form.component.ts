@@ -45,9 +45,7 @@ export class MotoFormComponent implements OnInit {
             text: 'No se ha podido obtener la información de la moto',
             icon: 'error',
             allowOutsideClick: false
-          }).then(() => {
-            this.router.navigate(['/motosList', this.moto.user]);
-          });
+          }).then(() => this.navBack());
         });
     }
 
@@ -110,9 +108,7 @@ export class MotoFormComponent implements OnInit {
           text: 'La información de la moto se guardó correctamente',
           icon: 'success',
           allowOutsideClick: false
-        }).then(() => {
-          this.router.navigate(['/motosList', moto.user]);
-        });
+        }).then(() => this.navBack());
       }).catch(() => {
         Swal.fire({
           title: 'Se ha producido un error',

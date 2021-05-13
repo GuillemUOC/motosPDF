@@ -11,11 +11,13 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { MotosListComponent } from './motos-list/motos-list.component';
 import { MotoFormComponent } from './moto-form/moto-form.component';
+import { TreatmentsListComponent } from './treatments-list/treatments-list.component';
+import { TreatmentFormComponent } from './treatment-form/treatment-form.component';
 
 
 
 @NgModule({
-  declarations: [UserFormComponent, UsersListComponent, LoginComponent, MotosListComponent, MotoFormComponent],
+  declarations: [UserFormComponent, UsersListComponent, LoginComponent, MotosListComponent, MotoFormComponent, TreatmentsListComponent, TreatmentFormComponent],
   imports: [
     CommonModule,
     RouterModule,

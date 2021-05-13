@@ -6,12 +6,16 @@ import { LoginComponent } from './pages/login/login.component';
 import { AuthGuard } from './guards/auth.guard';
 import { MotosListComponent } from './pages/motos-list/motos-list.component';
 import { MotoFormComponent } from './pages/moto-form/moto-form.component';
+import { TreatmentsListComponent } from './pages/treatments-list/treatments-list.component';
+import { TreatmentFormComponent } from './pages/treatment-form/treatment-form.component';
 
 const routes: Routes = [
   { path: 'usersList', component: UsersListComponent, canActivate: [AuthGuard] },
   { path: 'userForm/:user', component: UserFormComponent, canActivate: [AuthGuard] },
   { path: 'motosList/:user', component: MotosListComponent, canActivate: [AuthGuard] },
   { path: 'motoForm/:user/:moto', component: MotoFormComponent, canActivate: [AuthGuard] },
+  { path: 'treatmentsList/:user/:moto', component: TreatmentsListComponent, canActivate: [AuthGuard] },
+  { path: 'treatmentForm/:user/:moto/:treatment', component: TreatmentFormComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
   { path: '**', pathMatch: 'full', redirectTo: 'usersList' }
 ];

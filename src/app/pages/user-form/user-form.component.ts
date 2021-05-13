@@ -44,9 +44,7 @@ export class UserFormComponent implements OnInit {
             text: 'No se ha podido obtener la información del usuario',
             icon: 'error',
             allowOutsideClick: false
-          }).then(() => {
-            this.router.navigate(['/usersList']);
-          });
+          }).then(() => this.navBack());
         });
     }
 
@@ -114,7 +112,7 @@ export class UserFormComponent implements OnInit {
           if (!this.user.id) {
             this.usersService.resetConfiguration();
           }
-          this.router.navigate(['/usersList']);
+          this.navBack();
         });
       }).catch(() => {
         Swal.fire({

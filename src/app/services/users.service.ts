@@ -56,8 +56,9 @@ export class UsersService {
   async deleteUser(id: string): Promise<any> {
     await this.firebase.delete(this.collection, id);
     const motosService = this.injector.get(MotosService);
-    const motos = await motosService.getMotos(id);
-    motos.forEach(async moto => await motosService.deleteMoto(moto.id));
+    motosService.getMotos(id).then(motos =>
+      motos.forEach(async moto => await motosService.deleteMoto(moto.id))
+    );
   }
 
   async actualizeMotos(id: string): Promise<any> {

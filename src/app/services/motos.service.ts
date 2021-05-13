@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { MotoModel } from '../models/moto.model';
-import { Commons } from '../utils/commons.util';
 import { FirebaseService } from './firebase.service';
+import { TreatmentsService } from './treatments.service';
 import { UsersService } from './users.service';
 
 @Injectable({
@@ -10,7 +10,7 @@ import { UsersService } from './users.service';
 export class MotosService {
   public collection = 'motos';
 
-  constructor(private commons: Commons, private firebase: FirebaseService,  private usersService: UsersService) { }
+  constructor(private firebase: FirebaseService,  private usersService: UsersService, private injector: Injector) { }
 
   getMoto(id: string): Promise<MotoModel> | any {
     return this.firebase.getElment(this.collection, id);
@@ -44,6 +44,20 @@ export class MotosService {
     const moto = await this.getMoto(id);
     await this.firebase.delete(this.collection, id);
     await this.usersService.actualizeMotos(moto.user);
+    const treatmentsService = this.injector.get(TreatmentsService);
+    treatmentsService.getTreatments(id).then((treatments)=>
+      treatments.forEach(async treatment => treatmentsService.deleteTreatment(treatment.id))
+    );
   }
 
+  async actualizeTreatments(id: string): Promise<any> {
+    const treatmentsService = this.injector.get(TreatmentsService);
+    const treatments = await treatmentsService.getTreatments(id);
+    const moto = {
+      id,
+      treatments: treatments.length
+    };
+    this.updateMoto(moto);
+  }
 }
+

@@ -21,7 +21,11 @@ small {
   font-size: 0.5em;
 }
 
-.btn-info {
+textarea {
+  height: 100px;
+}
+
+.btn-info, .btn-warning {
   color: white !important;
 }
 
