@@ -33,7 +33,7 @@
     <div class="col-md-6 form-group">
       <label class="form-label">Marca <span class="required-field"></span></label>
       <input class="form-control text-muted" type="text" placeholder="Marca" formControlName="model"
-        [class.is-invalid]="form | isInvalidControl:'model'" maxlength="9">
+        [class.is-invalid]="form | isInvalidControl:'model'">
       <span *ngIf="form | isInvalidControl:'model'" class="form-text text-danger">
         El campo no puede estar vacio
       </span>

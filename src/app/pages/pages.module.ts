@@ -13,11 +13,12 @@ import { MotosListComponent } from './motos-list/motos-list.component';
 import { MotoFormComponent } from './moto-form/moto-form.component';
 import { TreatmentsListComponent } from './treatments-list/treatments-list.component';
 import { TreatmentFormComponent } from './treatment-form/treatment-form.component';
+import { PdfViewerComponent } from './pdf-viewer/pdf-viewer.component';
 
 
 
 @NgModule({
-  declarations: [UserFormComponent, UsersListComponent, LoginComponent, MotosListComponent, MotoFormComponent, TreatmentsListComponent, TreatmentFormComponent],
+  declarations: [UserFormComponent, UsersListComponent, LoginComponent, MotosListComponent, MotoFormComponent, TreatmentsListComponent, TreatmentFormComponent, PdfViewerComponent],
   imports: [
     CommonModule,
     RouterModule,

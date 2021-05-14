@@ -34,7 +34,7 @@ export class UserFormComponent implements OnInit {
 
       this.commons.forceLast(this.usersService.getUser(id))
         .then((user: UserModel) => {
-          this.user = user ? user : this.user;
+          this.user = user;
           this.createForm();
           Swal.close();
         })
@@ -97,11 +97,8 @@ export class UserFormComponent implements OnInit {
     // tslint:disable-next-line: radix
     formData.phone = parseInt(formData.phone);
     const user: UserModel = { ...this.user, ...formData };
-    const action = this.user.id ?
-      this.usersService.updateUser.bind(this.usersService, user) :
-      this.usersService.createUser.bind(this.usersService, user);
-
-    this.commons.forceLast(action())
+    const action = this.usersService[ this.user.id ? 'updateUser' : 'createUser'](user);
+    this.commons.forceLast(action)
       .then(() => {
         Swal.fire({
           title: this.user.id ? 'Usuario actualizado' : 'Usuario guardado',

@@ -18,8 +18,8 @@ export class TreatmentFormComponent implements OnInit {
   form: FormGroup;
 
   constructor(private formUtils: FormUtils, private fb: FormBuilder, private commons: Commons,
-    private treatmentsService: TreatmentsService, private router: Router,
-    private route: ActivatedRoute) { }
+              private treatmentsService: TreatmentsService, private router: Router,
+              private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.userId = this.route.snapshot.paramMap.get('user');
@@ -61,6 +61,7 @@ export class TreatmentFormComponent implements OnInit {
       resolved: [this.treatment.resolved],
       resolution: [this.treatment.resolution, Validators.required]
     });
+    this.manageResolutionDisabled();
   }
 
   saveForm(): void {
@@ -75,9 +76,6 @@ export class TreatmentFormComponent implements OnInit {
       return;
     }
 
-    alert("ok")
-    return
-
     Swal.fire({
       title: 'Espere',
       text: this.treatment.id ? 'Guardando tratamiento' : 'Actualizado tratamiento',
@@ -87,14 +85,9 @@ export class TreatmentFormComponent implements OnInit {
     Swal.showLoading();
 
     const formData = this.form.value;
-    // tslint:disable-next-line: radix
-    // formData.kilometers = parseInt(formData.kilometers);
     const treatment: TreatmentModel = { ...this.treatment, ...formData };
-    const action = this.treatment.id ?
-      this.treatmentsService.updateTreatment.bind(this.treatmentsService, treatment) :
-      this.treatmentsService.createTreatment.bind(this.treatmentsService, treatment);
-
-    this.commons.forceLast(action())
+    const action = this.treatmentsService[ this.treatment.id ? 'updateTreatment' : 'createTreatment'](treatment);
+    this.commons.forceLast(action)
       .then(() => {
         Swal.fire({
           title: this.treatment.id ? 'Tratamiento actualizado' : 'Tratamiento guardado',
@@ -112,12 +105,8 @@ export class TreatmentFormComponent implements OnInit {
       });
   }
 
-  onResolvedChange() {
-    if (!this.form.value.resolved) {
-      this.form.get("resolution").disable();
-    } else {
-      this.form.get("resolution").enable();
-    }
+  manageResolutionDisabled(): void {
+    this.form.get('resolution')[this.form.value.resolved ? 'enable' : 'disable']();
   }
 
 

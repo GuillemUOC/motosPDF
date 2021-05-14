@@ -8,6 +8,7 @@ import { MotosListComponent } from './pages/motos-list/motos-list.component';
 import { MotoFormComponent } from './pages/moto-form/moto-form.component';
 import { TreatmentsListComponent } from './pages/treatments-list/treatments-list.component';
 import { TreatmentFormComponent } from './pages/treatment-form/treatment-form.component';
+import { PdfViewerComponent } from './pages/pdf-viewer/pdf-viewer.component';
 
 const routes: Routes = [
   { path: 'usersList', component: UsersListComponent, canActivate: [AuthGuard] },
@@ -16,6 +17,7 @@ const routes: Routes = [
   { path: 'motoForm/:user/:moto', component: MotoFormComponent, canActivate: [AuthGuard] },
   { path: 'treatmentsList/:user/:moto', component: TreatmentsListComponent, canActivate: [AuthGuard] },
   { path: 'treatmentForm/:user/:moto/:treatment', component: TreatmentFormComponent, canActivate: [AuthGuard] },
+  { path: 'pdfViewer/:user/:moto/:treatment', component: PdfViewerComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
   { path: '**', pathMatch: 'full', redirectTo: 'usersList' }
 ];

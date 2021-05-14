@@ -35,7 +35,7 @@ export class MotoFormComponent implements OnInit {
 
       this.commons.forceLast(this.motosService.getMoto(id))
         .then((moto: MotoModel) => {
-          this.moto = moto ? moto : this.moto;
+          this.moto = moto;
           this.createForm();
           Swal.close();
         })
@@ -95,13 +95,10 @@ export class MotoFormComponent implements OnInit {
 
     const formData = this.form.value;
     // tslint:disable-next-line: radix
-    // formData.kilometers = parseInt(formData.kilometers);
+    formData.kilometers = parseInt(formData.kilometers);
     const moto: MotoModel = { ...this.moto, ...formData };
-    const action = this.moto.id ?
-      this.motosService.updateMoto.bind(this.motosService, moto) :
-      this.motosService.createMoto.bind(this.motosService, moto);
-
-    this.commons.forceLast(action())
+    const action = this.motosService[ this.moto.id ? 'updateMoto' : 'createMoto'](moto);
+    this.commons.forceLast(action)
       .then(() => {
         Swal.fire({
           title: this.moto.id ? 'Moto actualizada' : 'Moto guardada',

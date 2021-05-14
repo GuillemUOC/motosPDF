@@ -41,3 +41,33 @@ textarea {
 .required-field::after {
   content: "*";
 }
+
+.btn-size-big {
+  max-width: 500px;
+  width: 100%;
+}
+
+.A4 {
+	border: 5px solid black;
+	background: white;
+	width: 21cm;
+	min-height: 29.7cm;
+	max-height: 29.7cm;
+}
+
+.page.page-printable:last-child.A4 {
+	/* Use a little less of the real A4 height to avoid page break */
+	min-height: 29.68cm;
+	max-height: 29.68cm;
+}
+
+.page {
+	background: white;
+	border: 5px solid black;
+	box-shadow: 0 0 0.5cm rgba(0, 0, 0, 0.5);
+	box-sizing: border-box;
+}
+
+.page.page-grow {
+	max-height: none !important;
+}

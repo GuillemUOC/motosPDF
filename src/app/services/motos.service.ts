@@ -33,21 +33,24 @@ export class MotosService {
     await this.usersService.actualizeMotos(moto.user);
   }
 
-  async updateMoto(moto: MotoModel): Promise<any> {
+  async updateMoto(moto: any): Promise<any> {
     if (moto.registration && moto.user && await this.isRegistrationRepeated(moto.registration, moto.user, moto.id)) {
       return Promise.reject();
     }
     return this.firebase.update(this.collection, moto);
   }
 
-  async deleteMoto(id: string): Promise<any> {
+  async deleteMoto(id: string, actualize = true): Promise<any> {
     const moto = await this.getMoto(id);
     await this.firebase.delete(this.collection, id);
-    await this.usersService.actualizeMotos(moto.user);
     const treatmentsService = this.injector.get(TreatmentsService);
-    treatmentsService.getTreatments(id).then((treatments)=>
-      treatments.forEach(async treatment => treatmentsService.deleteTreatment(treatment.id))
+    treatmentsService.getTreatments(id).then((treatments) =>
+      treatments.forEach(async treatment => treatmentsService.deleteTreatment(treatment.id, false))
     );
+
+    if (actualize) {
+      await this.usersService.actualizeMotos(moto.user);
+    }
   }
 
   async actualizeTreatments(id: string): Promise<any> {

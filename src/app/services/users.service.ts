@@ -46,7 +46,7 @@ export class UsersService {
     return this.firebase.create(this.collection, user);
   }
 
-  async updateUser(user: UserModel): Promise<any> {
+  async updateUser(user: any): Promise<any> {
     if (user.dni && await this.isDniRepeated(user.dni, user.id)) {
       return Promise.reject();
     }
@@ -57,7 +57,7 @@ export class UsersService {
     await this.firebase.delete(this.collection, id);
     const motosService = this.injector.get(MotosService);
     motosService.getMotos(id).then(motos =>
-      motos.forEach(async moto => await motosService.deleteMoto(moto.id))
+      motos.forEach(async moto => await motosService.deleteMoto(moto.id, false))
     );
   }
 
