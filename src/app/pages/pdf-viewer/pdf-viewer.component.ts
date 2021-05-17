@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { MotoModel } from '../../models/moto.model';
@@ -8,7 +8,6 @@ import { UsersService } from '../../services/users.service';
 import { MotosService } from '../../services/motos.service';
 import { TreatmentsService } from '../../services/treatments.service';
 import { Commons } from '../../utils/commons.util';
-import * as $ from 'jquery';
 
 @Component({
   selector: 'app-pdf-viewer',
@@ -16,6 +15,7 @@ import * as $ from 'jquery';
   styleUrls: ['./pdf-viewer.component.scss']
 })
 export class PdfViewerComponent implements OnInit {
+  @ViewChild('pdf') pdfTemplate: any;
   user = new UserModel();
   moto = new MotoModel();
   treatment = new TreatmentModel();
@@ -58,11 +58,20 @@ export class PdfViewerComponent implements OnInit {
       });
   }
 
-  generatePDF(): void {
+  async generatePDF(): Promise<void> {
     const options = { filename: `${this.user.dni}_${this.moto.registration}.pdf` };
-    const htmlTemplate = $('.page-printable')[0];
+    const htmlTemplate = this.pdfTemplate.nativeElement;
     const pdf = this.commons.getPdfFromHtml(htmlTemplate, options);
-    pdf.save();
+
+    Swal.fire({
+      title: 'Espere',
+      text: 'Generando PDF',
+      icon: 'info',
+      allowOutsideClick: false
+    });
+    Swal.showLoading();
+    await this.commons.forceLast(pdf.save());
+    Swal.close();
   }
 
   navBack(): any {

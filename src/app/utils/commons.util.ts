@@ -7,10 +7,8 @@ import html2pdf from 'html2pdf.js';
 export class Commons {
   forceLast(action: any, time: number = 500): Promise<any> {
     if (!action.then) {
-      action = new Promise<any>(resolve => {
-        const res = action();
-        resolve(res);
-      });
+      const value = action();
+      action = Promise.resolve(action());
     }
     const timer = new Promise<void>(resolve => {
       setTimeout(() => resolve(), time);
