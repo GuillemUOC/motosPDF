@@ -63,11 +63,11 @@ export class FirebaseService {
     return itemsCollection.doc(id).delete();
   }
 
-  setRelationsNumber(parentList: any[], childList: any[], propertyToCompare: string, propertyName: string): void {
+  setRelationsNumber(parentList: any[], childList: any[], propertyToCompare: string, propertyWithNumber: string): void {
     parentList.forEach(parent => {
       const patt = new RegExp(parent.id, 'g');
       const relations = childList.map(child => child[propertyToCompare]).join().match(patt);
-      parent[propertyName] = relations ? relations.length : 0;
+      parent[propertyWithNumber] = relations ? relations.length : 0;
     });
   }
 }
