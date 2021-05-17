@@ -21,7 +21,6 @@ export class UsersService {
 
   async getUsers(filters?: FilterUsers, overwriteFilters: boolean = true): Promise<UserModel[]> {
     let users: UserModel[] = await this.firebase.getElments(this.collection, ref => ref.orderBy('timestamp', 'desc'));
-    console.log(users);
     if (filters) {
       users = users.filter(user => (
         Object.entries(filters).some(([key, value]) => (
