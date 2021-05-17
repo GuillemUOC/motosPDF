@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import html2pdf from 'html2pdf.js';
 
 @Injectable({
   providedIn: 'root'
@@ -23,5 +24,33 @@ export class Commons {
 
   copyObject(element: any): any {
     return JSON.parse(JSON.stringify(element));
+  }
+
+  getPdfFromHtml(htmlTemplate: any, options?: any): any {
+    let htmlPdf: any;
+    if (typeof htmlTemplate === 'string') {
+      htmlPdf = document.createElement('div');
+      htmlPdf.innerHTML = htmlTemplate;
+    } else {
+      htmlPdf = htmlTemplate;
+    }
+
+    options = {
+      margin: 0,
+      image: {
+        type: 'jpeg',
+        quality: 0.98
+      },
+      html2canvas: {
+        scale: 2
+      },
+      jsPDF: {
+        unit: 'pt',
+        format: 'a4',
+        orientation: 'portrait'
+      },
+      ...options
+    };
+    return html2pdf().set(options).from(htmlPdf);
   }
 }

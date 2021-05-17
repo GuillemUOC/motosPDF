@@ -9,7 +9,7 @@
     <div class="col-md-12 form-group">
       <label class="form-label">Motivo <span class="required-field"></span></label>
       <input class="form-control text-muted" type="text" placeholder="Motivo" formControlName="reason"
-        [class.is-invalid]="form | isInvalidControl:'reason'">
+        [class.is-invalid]="form | isInvalidControl:'reason'" maxlength="75">
       <span *ngIf="form | isInvalidControl:'reason'" class="form-text text-danger">
         El campo no puede estar vacio
       </span>

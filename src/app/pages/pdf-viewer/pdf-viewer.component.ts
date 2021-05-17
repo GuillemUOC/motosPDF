@@ -8,6 +8,7 @@ import { UsersService } from '../../services/users.service';
 import { MotosService } from '../../services/motos.service';
 import { TreatmentsService } from '../../services/treatments.service';
 import { Commons } from '../../utils/commons.util';
+import * as $ from 'jquery';
 
 @Component({
   selector: 'app-pdf-viewer',
@@ -55,6 +56,13 @@ export class PdfViewerComponent implements OnInit {
           allowOutsideClick: false
         }).then(() => this.navBack());
       });
+  }
+
+  generatePDF(): void {
+    const options = { filename: `${this.user.dni}_${this.moto.registration}.pdf` };
+    const htmlTemplate = $('.page-printable')[0];
+    const pdf = this.commons.getPdfFromHtml(htmlTemplate, options);
+    pdf.save();
   }
 
   navBack(): any {

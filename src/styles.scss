@@ -1,5 +1,5 @@
 body {
-  background:url(assets/img/background.png);
+  background: url(assets/img/background.png);
 }
 
 .header {
@@ -25,7 +25,8 @@ textarea {
   height: 100px;
 }
 
-.btn-info, .btn-warning {
+.btn-info,
+.btn-warning {
   color: white !important;
 }
 
@@ -48,26 +49,30 @@ textarea {
 }
 
 .A4 {
-	border: 5px solid black;
-	background: white;
-	width: 21cm;
-	min-height: 29.7cm;
-	max-height: 29.7cm;
+  background: white;
+  width: 21cm;
+  min-height: 29.7cm;
+  max-height: 29.7cm;
 }
 
 .page.page-printable:last-child.A4 {
-	/* Use a little less of the real A4 height to avoid page break */
-	min-height: 29.68cm;
-	max-height: 29.68cm;
+  /* Use a little less of the real A4 height to avoid page break */
+  min-height: 29.68cm;
+  max-height: 29.68cm;
 }
 
 .page {
-	background: white;
-	border: 5px solid black;
-	box-shadow: 0 0 0.5cm rgba(0, 0, 0, 0.5);
-	box-sizing: border-box;
+  background: white;
+  box-shadow: 0 0 0.5cm rgba(0, 0, 0, 0.5);
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .page.page-grow {
-	max-height: none !important;
+  max-height: none !important;
+}
+
+.text-title {
+  text-decoration: underline;
+  font-weight: bold;
 }

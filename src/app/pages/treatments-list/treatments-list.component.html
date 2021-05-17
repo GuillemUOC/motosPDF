@@ -29,7 +29,8 @@
         </td>
         <td>
           <div class="d-flex justify-content-center">
-            <button type="button" class="btn btn-warning m-1"
+            <button [ngClass]="treatment.resolved ? 'btn-warning' : 'btn-secondary disabled'"
+              type="button" class="btn m-1"
               [routerLink]="['/pdfViewer', userId, motoId, treatment.id]">
               <i class="fa fa-file-pdf-o"></i>
             </button>
