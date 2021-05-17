@@ -1,4 +1,4 @@
-import { Component, Injectable, Injector } from '@angular/core';
+import { Component, Injectable } from '@angular/core';
 import { FilterUsers } from '../interfaces/filter-users.interface';
 import { Commons } from '../utils/commons.util';
 import { UserModel } from '../models/user.model';
@@ -13,14 +13,19 @@ export class UsersService {
   public filters: FilterUsers;
   public page = 1;
 
-  constructor(private commons: Commons, private firebase: FirebaseService, private injector: Injector) { }
+  constructor(private commons: Commons, private firebase: FirebaseService, private motosService: MotosService) { }
 
   getUser(id: string): Promise<UserModel> | any {
     return this.firebase.getElment(this.collection, id);
   }
 
   async getUsers(filters?: FilterUsers, overwriteFilters: boolean = true): Promise<UserModel[]> {
-    let users: UserModel[] = await this.firebase.getElments(this.collection, ref => ref.orderBy('timestamp', 'desc'));
+    // tslint:disable-next-line: prefer-const
+    let [users, motos] = await Promise.all([
+      await this.firebase.getElments(this.collection, ref => ref.orderBy('timestamp', 'desc')),
+      await this.firebase.getElments(this.motosService.collection)
+    ]);
+
     if (filters) {
       users = users.filter(user => (
         Object.entries(filters).some(([key, value]) => (
@@ -28,9 +33,11 @@ export class UsersService {
         ))
       ));
     }
-    if (overwriteFilters){
+    if (overwriteFilters) {
       this.filters = filters;
     }
+
+    this.firebase.setRelationsNumber(users, motos, 'user', 'motos');
     return users;
   }
 
@@ -55,20 +62,8 @@ export class UsersService {
 
   async deleteUser(id: string): Promise<any> {
     await this.firebase.delete(this.collection, id);
-    const motosService = this.injector.get(MotosService);
-    motosService.getMotos(id).then(motos =>
-      motos.forEach(async moto => await motosService.deleteMoto(moto.id, false))
-    );
-  }
-
-  async actualizeMotos(id: string): Promise<any> {
-    const motosService = this.injector.get(MotosService);
-    const motos = await motosService.getMotos(id);
-    const user = {
-      id,
-      motos: motos.length
-    };
-    this.updateUser(user);
+    this.firebase.getElments(this.motosService.collection, ref => ref.where('user', '==', id))
+      .then(motos => motos.forEach(async moto => await this.motosService.deleteMoto(moto.id)));
   }
 
   resetConfiguration(): void {

@@ -62,4 +62,12 @@ export class FirebaseService {
     const itemsCollection = this.fs.collection<any>(collectionName);
     return itemsCollection.doc(id).delete();
   }
+
+  setRelationsNumber(parentList: any[], childList: any[], propertyToCompare: string, propertyName: string): void {
+    parentList.forEach(parent => {
+      const patt = new RegExp(parent.id, 'g');
+      const relations = childList.map(child => child[propertyToCompare]).join().match(patt);
+      parent[propertyName] = relations ? relations.length : 0;
+    });
+  }
 }

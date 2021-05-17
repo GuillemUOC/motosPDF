@@ -5,8 +5,8 @@ export class MotoModel {
   model: string;
   kilometers: number;
   timestamp: number;
-  treatments: number;
   user: string;
+  treatments?: number;
 
   constructor() {
     this.id = null;
@@ -15,7 +15,6 @@ export class MotoModel {
     this.model = null;
     this.kilometers = null;
     this.timestamp = new Date().getTime();
-    this.treatments = 0;
     this.user = null;
   }
 }

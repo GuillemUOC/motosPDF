@@ -6,7 +6,7 @@ export class UserModel {
   phone: number;
   mail: string;
   timestamp: number;
-  motos: number;
+  motos?: number;
 
   constructor() {
     this.id = null;
@@ -16,6 +16,5 @@ export class UserModel {
     this.phone = null;
     this.mail = null;
     this.timestamp = new Date().getTime();
-    this.motos = 0;
   }
 }

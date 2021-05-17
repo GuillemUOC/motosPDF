@@ -1,8 +1,7 @@
-import { Injectable, Injector } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { MotoModel } from '../models/moto.model';
 import { FirebaseService } from './firebase.service';
 import { TreatmentsService } from './treatments.service';
-import { UsersService } from './users.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,14 +9,20 @@ import { UsersService } from './users.service';
 export class MotosService {
   public collection = 'motos';
 
-  constructor(private firebase: FirebaseService,  private usersService: UsersService, private injector: Injector) { }
+  constructor(private firebase: FirebaseService, private treatmentsService: TreatmentsService) { }
 
   getMoto(id: string): Promise<MotoModel> | any {
     return this.firebase.getElment(this.collection, id);
   }
 
   async getMotos(userId: string): Promise<MotoModel[]> {
-    return await this.firebase.getElments(this.collection, ref => ref.orderBy('timestamp', 'desc').where('user', '==', userId));
+    const [motos, treatments] = await Promise.all([
+      this.firebase.getElments(this.collection, ref => ref.orderBy('timestamp', 'desc').where('user', '==', userId)),
+      this.firebase.getElments(this.treatmentsService.collection)
+    ]);
+
+    this.firebase.setRelationsNumber(motos, treatments, 'moto', 'treatments');
+    return motos;
   }
 
   async isRegistrationRepeated(registration: string, userId: string, motoId?: string): Promise<boolean> {
@@ -30,7 +35,6 @@ export class MotosService {
       return Promise.reject();
     }
     await this.firebase.create(this.collection, moto);
-    await this.usersService.actualizeMotos(moto.user);
   }
 
   async updateMoto(moto: any): Promise<any> {
@@ -40,27 +44,11 @@ export class MotosService {
     return this.firebase.update(this.collection, moto);
   }
 
-  async deleteMoto(id: string, actualize = true): Promise<any> {
+  async deleteMoto(id: string): Promise<any> {
     const moto = await this.getMoto(id);
     await this.firebase.delete(this.collection, id);
-    const treatmentsService = this.injector.get(TreatmentsService);
-    treatmentsService.getTreatments(id).then((treatments) =>
-      treatments.forEach(async treatment => treatmentsService.deleteTreatment(treatment.id, false))
-    );
-
-    if (actualize) {
-      await this.usersService.actualizeMotos(moto.user);
-    }
-  }
-
-  async actualizeTreatments(id: string): Promise<any> {
-    const treatmentsService = this.injector.get(TreatmentsService);
-    const treatments = await treatmentsService.getTreatments(id);
-    const moto = {
-      id,
-      treatments: treatments.length
-    };
-    this.updateMoto(moto);
+    this.firebase.getElments(this.treatmentsService.collection, ref => ref.where('moto', '==', id))
+      .then((treatments) => treatments.forEach(async treatment => this.treatmentsService.deleteTreatment(treatment.id)));
   }
 }
 
