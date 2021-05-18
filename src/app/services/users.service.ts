@@ -69,6 +69,15 @@ export class UsersService {
   resetConfiguration(): void {
     this.page = 1;
     this.filters = null;
+    console.log(this.page);
+  }
+
+  setPage(page: number): void {
+    this.page = page;
+  }
+
+  getPage(): number {
+    return this.page;
   }
 
 }

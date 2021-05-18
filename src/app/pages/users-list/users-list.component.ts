@@ -25,8 +25,12 @@ export class UsersListComponent implements OnInit {
     this.loading = true;
 
     this.usersService.getUsers(this.usersService.filters)
-      .then(users => this.users = users)
-      .catch(() => {
+      .then(users => {
+        this.users = users;
+        if (Math.ceil(users.length / this.itemsPerPage) < this.usersService.getPage()) {
+          this.usersService.setPage(1);
+        }
+      }).catch(() => {
         this.loading = false;
         Swal.fire({
           title: 'Se ha producido un error',
@@ -74,6 +78,7 @@ export class UsersListComponent implements OnInit {
     this.commons.forceLast(this.usersService.getUsers(filters))
       .then((users) => {
         this.users = users;
+        setTimeout(() => this.usersService.setPage(1));
         Swal.fire({
           title: 'Filtros aplicados',
           text: `Elementos encontrados: (${this.users.length})`,
@@ -95,6 +100,7 @@ export class UsersListComponent implements OnInit {
     this.commons.forceLast(this.usersService.getUsers())
       .then((users) => {
         this.users = users;
+        setTimeout(() => this.usersService.setPage(1));
         this.filters.reset();
         Swal.fire({
           title: 'Filtros eliminados',

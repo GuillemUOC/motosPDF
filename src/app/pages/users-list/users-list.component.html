@@ -103,7 +103,7 @@
   </table>
 </div>
 <div class="d-flex justify-content-center">
-  <pagination *ngIf="users.length > itemsPerPage" [boundaryLinks]="true" [totalItems]="users.length + 1"
+  <pagination *ngIf="users.length > itemsPerPage" [boundaryLinks]="true" [totalItems]="users.length"
     previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [maxSize]="paginationMaxSize"
     [(ngModel)]="usersService.page" [itemsPerPage]="itemsPerPage">
   </pagination>
