@@ -29,7 +29,7 @@
         <td>{{ moto.registration }}</td>
         <td>{{ moto.brand }}</td>
         <td>{{ moto.model }}</td>
-        <td>{{ moto.kilometers }}</td>
+        <td>{{ moto.kilometers === null ? '-' : moto.kilometers }}</td>
         <td>
           <a class="not-underline" [routerLink]="['/treatmentsList', userId, moto.id]">
             <span class="me-1">({{ moto.treatments }})</span>

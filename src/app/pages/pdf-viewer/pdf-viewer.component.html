@@ -5,82 +5,86 @@
   </button>
 </div>
 
-<div class="p-3 overflow-auto">
-  <div #pdf class="page page-printable A4 mx-auto px-5 pt-5 pb-2">
-    <div class="mb-5">
-      <h1 class="text-center">Motor4U</h1>
-    </div>
+<div class="d-flex overflow-auto">
+  <div class="p-3 mx-auto">
 
-    <div class="mb-5">
-      <h5 class="text-title">Datos de la moto</h5>
-      <div class="d-flex">
-        <div class="info-column">
-          <div class="d-flex">
-            <span class="me-1">Matrícula:</span><span>{{ moto.registration }}</span>
+    <div #pdf class="page page-printable A4 mx-auto px-5 pt-5 pb-2">
+      <div class="mb-5">
+        <h1 class="text-center">Motor4U</h1>
+      </div>
+  
+      <div class="mb-5">
+        <h5 class="text-title">Datos de la moto</h5>
+        <div class="d-flex">
+          <div class="info-column">
+            <div class="d-flex">
+              <span class="me-1">Matrícula:</span><span>{{ moto.registration }}</span>
+            </div>
+            <div class="d-flex">
+              <span class="me-1">Marca:</span><span>{{ moto.brand }}</span>
+            </div>
           </div>
-          <div class="d-flex">
-            <span class="me-1">Marca:</span><span>{{ moto.brand }}</span>
-          </div>
-        </div>
-        <div class="info-column">
-          <div class="d-flex">
-            <span class="me-1">Km:</span><span>{{ moto.kilometers }}</span>
-          </div>
-          <div class="d-flex">
-            <span class="me-1">Modelo:</span><span>{{ moto.model }}</span>
+          <div class="info-column">
+            <div class="d-flex">
+              <span class="me-1">Km:</span><span>{{ moto.kilometers === null ? '-' : moto.kilometers }}</span>
+            </div>
+            <div class="d-flex">
+              <span class="me-1">Modelo:</span><span>{{ moto.model }}</span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-
-    <div class="mb-5">
-      <h5 class="text-title">Tratamiento aplicado</h5>
-      <div class="d-flex mb-1">
-        <span class="me-1">Motivo:</span><span>{{ treatment.reason }}</span>
+  
+      <div class="mb-5">
+        <h5 class="text-title">Tratamiento aplicado</h5>
+        <div class="d-flex mb-1">
+          <span class="me-1">Motivo:</span><span>{{ treatment.reason }}</span>
+        </div>
+        <div class="mb-1">Comentario:</div>
+        <div class="read-text-area mb-1">{{ treatment.comments }}</div>
+        <div class="mb-1">Resolución:</div>
+        <div class="read-text-area">{{ treatment.resolution }}</div>
       </div>
-      <div class="mb-1">Comentario:</div>
-      <div class="read-text-area mb-1">{{ treatment.comments }}</div>
-      <div class="mb-1">Resolución:</div>
-      <div class="read-text-area">{{ treatment.resolution }}</div>
-    </div>
-
-    <div class="mb-5">
-      <h5 class="text-title">Datos del cliente</h5>
-      <div class="d-flex">
-        <div class="info-column">
-          <div class="d-flex">
-            <span class="me-1">DNI:</span><span>{{ user.dni }}</span>
+  
+      <div class="mb-5">
+        <h5 class="text-title">Datos del cliente</h5>
+        <div class="d-flex">
+          <div class="info-column">
+            <div class="d-flex">
+              <span class="me-1">DNI:</span><span>{{ user.dni }}</span>
+            </div>
+            <div class="d-flex">
+              <span class="me-1">Teléfono:</span><span>{{ user.phone }}</span>
+            </div>
           </div>
-          <div class="d-flex">
-            <span class="me-1">Teléfono:</span><span>{{ user.phone }}</span>
+          <div class="info-column">
+            <div class="d-flex">
+              <span class="me-1">Nombre:</span><span>{{ user.name }} {{ user.surname }}</span>
+            </div>
+            <div class="d-flex">
+              <span class="me-1">Correo:</span><span>{{ user.mail }}</span>
+            </div>
           </div>
         </div>
-        <div class="info-column">
-          <div class="d-flex">
-            <span class="me-1">Nombre:</span><span>{{ user.name }} {{ user.surname }}</span>
-          </div>
-          <div class="d-flex">
-            <span class="me-1">Correo:</span><span>{{ user.mail }}</span>
-          </div>
-        </div>
+      </div>
+  
+      <div class="mb-5">
+        Firma: ___________________
+      </div>
+  
+      <div class="text-terms">
+        El cliente autoriza realizar los trabajos descritos y a realizar las pruebas de circulación necesarias para el
+        diagnóstico o verificación. Y certifica que el vehículo entregado está cubierto por el seguro obligatorio del
+        automóvil.
+        El taller no se hace responsable de los objetos depositados en el interior del vehículo no comunicados
+        previamente, constando y anotados en la presente O.R.
+        La tramitación del pago de la factura por el trabajo realizado mediante este encargo, a través de una entidad
+        aseguradora o similar, no supone la sustitución de la obligación de pago que tiene el propietario del vehículo.
+        En cumplimiento con la ley orgánica 15/199, de 13 de diciembre de protección de datos de carácter personal, se
+        informa al cliente que sus datos personales fines de gestión administrativa y comercial. Usted puede ejercitar su
+        derecho de acceso, rectificación, cancelación y oposición.
       </div>
     </div>
-
-    <div class="mb-5">
-      Firma: ___________________
-    </div>
-
-    <div class="text-terms">
-      El cliente autoriza realizar los trabajos descritos y a realizar las pruebas de circulación necesarias para el
-      diagnóstico o verificación. Y certifica que el vehículo entregado está cubierto por el seguro obligatorio del
-      automóvil.
-      El taller no se hace responsable de los objetos depositados en el interior del vehículo no comunicados
-      previamente, constando y anotados en la presente O.R.
-      La tramitación del pago de la factura por el trabajo realizado mediante este encargo, a través de una entidad
-      aseguradora o similar, no supone la sustitución de la obligación de pago que tiene el propietario del vehículo.
-      En cumplimiento con la ley orgánica 15/199, de 13 de diciembre de protección de datos de carácter personal, se
-      informa al cliente que sus datos personales fines de gestión administrativa y comercial. Usted puede ejercitar su
-      derecho de acceso, rectificación, cancelación y oposición.
-    </div>
+    
   </div>
 </div>

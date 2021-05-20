@@ -58,7 +58,7 @@ export class FirebaseService {
     return itemsCollection.doc(id).update(element);
   }
 
-  delete(collectionName: string, id: string): Promise<void> {
+  delete(collectionName: string, id: string): Promise<any> {
     const itemsCollection = this.fs.collection<any>(collectionName);
     return itemsCollection.doc(id).delete();
   }

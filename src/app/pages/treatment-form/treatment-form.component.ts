@@ -85,8 +85,9 @@ export class TreatmentFormComponent implements OnInit {
     Swal.showLoading();
 
     const formData = this.form.value;
+    formData.resolution = formData.resolution || null;
     const treatment: TreatmentModel = { ...this.treatment, ...formData };
-    const action = this.treatmentsService[ this.treatment.id ? 'updateTreatment' : 'createTreatment'](treatment);
+    const action = this.treatmentsService[this.treatment.id ? 'updateTreatment' : 'createTreatment'](treatment);
     this.commons.forceLast(action)
       .then(() => {
         Swal.fire({
